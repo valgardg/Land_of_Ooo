@@ -11,10 +11,7 @@ public class animationStateController : MonoBehaviour
 
     int isWalkingHash;
     int isRunningHash;
-
-    public float walkignSpeed;
-    public float runningSpeed;
-    public float turningSpeed;
+    int isDancingHash;
     
     float horizontalInput;
     float verticalInput;
@@ -27,13 +24,10 @@ public class animationStateController : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
-        rb = GetComponent<Rigidbody>();
 
         isWalkingHash = Animator.StringToHash("isWalking");
         isRunningHash = Animator.StringToHash("isRunning");
-
-        rb = GetComponent<Rigidbody>();
-        rb.freezeRotation = true;
+        isDancingHash = Animator.StringToHash("isDancing");
     }
 
     // Update is called once per frame
@@ -41,11 +35,10 @@ public class animationStateController : MonoBehaviour
     {
         bool isRunning = animator.GetBool(isRunningHash);
         bool isWalking = animator.GetBool(isWalkingHash);
-        bool forwardPressed = Input.GetKey("w");
+        bool forwardPressed = Input.GetKey("w") || Input.GetKey("a") || Input.GetKey("s") || Input.GetKey("d");
         bool runPressed = Input.GetKey("left shift");
 
-        bool leftPressed = Input.GetKey("a");
-        bool rightPressed = Input.GetKey("d");
+        bool dancePressed = Input.GetKey("k");
 
         // if player presses w key
         if(!isWalking && forwardPressed){
@@ -64,51 +57,9 @@ public class animationStateController : MonoBehaviour
             animator.SetBool(isRunningHash, false);
         }
 
-        // handle left and right turns
-        if(leftPressed){
-            gameObject.transform.Rotate(0f,-turningSpeed * Time.deltaTime,0f, Space.World);
-        }
-        if(rightPressed){
-            gameObject.transform.Rotate(0f,turningSpeed * Time.deltaTime,0f, Space.World);
+        if(dancePressed){
+            animator.SetBool(isDancingHash, true);
         }
 
-        MyInput();
-        SpeedControl();
-
-        rb.drag = groundDrag;
-    }
-
-     private void FixedUpdate(){
-        MovePlayer();
-    }
-
-    private void MyInput(){
-        //horizontalInput = Input.GetAxisRaw("Horizontal");
-        //verticalInput = Input.GetAxisRaw("Vertical");
-
-        verticalInput = 0f;
-        if(Input.GetKey("w")){
-            verticalInput += 1f;
-        }
-        if(Input.GetKey("s")){
-            verticalInput -= 1f;
-        }
-    }
-
-    private void MovePlayer(){
-        // calculate movement direction
-        moveDirection = orientation.forward * verticalInput; //+ orientation.right * horizontalInput;
-        // apply the movement
-        //print($"move direction: {moveDirection}");
-        float speed = animator.GetBool(isRunningHash) ? runningSpeed : walkignSpeed;
-        rb.AddForce(moveDirection.normalized * speed * 10f, ForceMode.Force);
-    }
-
-    private void SpeedControl(){
-        Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-        if(flatVel.magnitude > walkignSpeed){
-            Vector3 limitedVel = flatVel.normalized * walkignSpeed;
-            rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
-        }
     }
 }

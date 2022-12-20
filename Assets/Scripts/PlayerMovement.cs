@@ -5,7 +5,9 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Movement")]
-    public float moveSpeed;
+    public float walkSpeed;
+    public float runSpeed;
+    float moveSpeed;
 
     public float groundDrag;
 
@@ -74,6 +76,11 @@ public class PlayerMovement : MonoBehaviour
             readyToJump = false;
             Jump();
             Invoke(nameof(ResetJump), jumpCooldown);
+        }
+        if(Input.GetKey("left shift")){
+            moveSpeed = runSpeed;
+        }else{
+            moveSpeed = walkSpeed;
         }
     }
 
