@@ -29,9 +29,14 @@ public class PlayerMovement : MonoBehaviour
     float horizontalInput;
     float verticalInput;
 
+    public AudioSource swordAudio;
+
     Vector3 moveDirection;
 
     Rigidbody rb;
+    
+    // animation stuff
+    public Animator animator;
 
     // Start is called before the first frame update
     void Start()
@@ -43,20 +48,22 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+
         // ground check
         grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
 
         MyInput();
 
         // apply drag
-        if (grounded)
-        {
-            rb.drag = groundDrag;
-        }
-        else
-        {
-            rb.drag = 0;
-        }
+        rb.drag = groundDrag;
+        // if (grounded)
+        // {
+        //     rb.drag = groundDrag;
+        // }
+        // else
+        // {
+        //     rb.drag = 0;
+        // }
 
     }
 
@@ -77,7 +84,10 @@ public class PlayerMovement : MonoBehaviour
             Jump();
             Invoke(nameof(ResetJump), jumpCooldown);
         }
-        if(Input.GetKey("left shift")){
+        if(animator.GetCurrentAnimatorStateInfo(0).IsName("FinnStandingMeeleAttackDownward") || animator.GetCurrentAnimatorStateInfo(0).IsName("FinnStandingMeleeAttackBackhand") || animator.GetCurrentAnimatorStateInfo(0).IsName("FinnStandingMeleeAttackHorizontal")){
+            moveSpeed = 0;
+        }
+        else if(Input.GetKey("left shift")){
             moveSpeed = runSpeed;
         }else{
             moveSpeed = walkSpeed;

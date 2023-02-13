@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class animationStateController : MonoBehaviour
 {
@@ -12,7 +13,12 @@ public class animationStateController : MonoBehaviour
     int isWalkingHash;
     int isRunningHash;
     int isDancingHash;
+    int isAttackingDownwardHash;
+    int isAttackingHorizontalHash;
+    int isAttackingBackhandHash;
     
+    public AudioSource swordSound;
+
     float horizontalInput;
     float verticalInput;
 
@@ -28,6 +34,9 @@ public class animationStateController : MonoBehaviour
         isWalkingHash = Animator.StringToHash("isWalking");
         isRunningHash = Animator.StringToHash("isRunning");
         isDancingHash = Animator.StringToHash("isDancing");
+        isAttackingDownwardHash = Animator.StringToHash("isAttackingDownward");
+        isAttackingBackhandHash = Animator.StringToHash("isAttackingBackhand");
+        isAttackingHorizontalHash = Animator.StringToHash("isAttackingHorizontal");
     }
 
     // Update is called once per frame
@@ -39,6 +48,14 @@ public class animationStateController : MonoBehaviour
         bool runPressed = Input.GetKey("left shift");
 
         bool dancePressed = Input.GetKey("k");
+        animator.SetBool(isDancingHash, false);
+
+        // resetting so it doesnt loop infinitely
+        bool attackPressed = Input.GetMouseButton(0);
+        bool heavyAttackPressed = Input.GetKey("left shift");
+        animator.SetBool(isAttackingDownwardHash, false);
+        animator.SetBool(isAttackingBackhandHash, false);
+        animator.SetBool(isAttackingHorizontalHash, false);
 
         // if player presses w key
         if(!isWalking && forwardPressed){
@@ -59,6 +76,18 @@ public class animationStateController : MonoBehaviour
 
         if(dancePressed){
             animator.SetBool(isDancingHash, true);
+        }
+
+        if(attackPressed){
+            //swordSound.Play();
+            if(heavyAttackPressed){
+                animator.SetBool(isAttackingBackhandHash, true);
+            }else{
+                List<int> attacks = new () {isAttackingHorizontalHash, isAttackingDownwardHash};
+                System.Random rnd = new System.Random();
+                int attackGenerated = rnd.Next(0, 2);
+                animator.SetBool(attacks[attackGenerated], true);
+            }
         }
 
     }

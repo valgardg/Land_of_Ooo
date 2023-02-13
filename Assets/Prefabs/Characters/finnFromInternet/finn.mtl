@@ -1,0 +1,49 @@
+# OBJ Material Export by Luxion KeyShot
+
+newmtl Hard Shiny Plastic Beige #1
+Kd 0.724163 0.621318 0.434042
+Ks 0.992157 0.992157 0.992157
+
+newmtl Hard Shiny Plastic Lime Green
+Kd 0.334251 0.700001 0.0349918
+Ks 0.992157 0.992157 0.992157
+
+newmtl Hard Shiny Plastic Black #1
+Kd 0.00784314 0.00784314 0.00784314
+Ks 0.992157 0.992157 0.992157
+
+newmtl Hard Shiny Plastic Beige
+Kd 0.724163 0.621318 0.434042
+Ks 0.992157 0.992157 0.992157
+
+newmtl Hard Shiny Plastic White
+Kd 1 1 1
+Ks 0.992157 0.992157 0.992157
+
+newmtl Hard Shiny Plastic Beige #2
+Kd 0.724163 0.621318 0.434042
+Ks 0.992157 0.992157 0.992157
+
+newmtl Hard Shiny Plastic Black #2
+Kd 0.00784314 0.00784314 0.00784314
+Ks 0.992157 0.992157 0.992157
+
+newmtl Hard Shiny Plastic Blue
+Kd 5.29438e-006 0.166667 0.5
+Ks 0.992157 0.992157 0.992157
+
+newmtl Hard Shiny Plastic Light Blue
+Kd 2.15626e-005 0.403602 0.92311
+Ks 0.992157 0.992157 0.992157
+
+newmtl Hard Shiny Plastic Black
+Kd 0.00784314 0.00784314 0.00784314
+Ks 0.992157 0.992157 0.992157
+
+newmtl Hard Shiny Plastic White #1
+Kd 1 1 1
+Ks 0.992157 0.992157 0.992157
+
+newmtl Hard Shiny Plastic Green
+Kd 0.0072013 0.360001 0.00719781
+Ks 0.992157 0.992157 0.992157
