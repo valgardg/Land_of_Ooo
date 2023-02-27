@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class animationStateController : MonoBehaviour
 {
@@ -9,13 +10,17 @@ public class animationStateController : MonoBehaviour
     Animator animator;
     Rigidbody rb;
 
+    public PlayerScript playerScript;
+
     int isWalkingHash;
     int isRunningHash;
-
-    public float walkignSpeed;
-    public float runningSpeed;
-    public float turningSpeed;
+    int isDancingHash;
+    int isAttackingDownwardHash;
+    int isAttackingHorizontalHash;
+    int isAttackingBackhandHash;
     
+    public AudioSource swordSound;
+
     float horizontalInput;
     float verticalInput;
 
@@ -27,13 +32,13 @@ public class animationStateController : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
-        rb = GetComponent<Rigidbody>();
 
         isWalkingHash = Animator.StringToHash("isWalking");
         isRunningHash = Animator.StringToHash("isRunning");
-
-        rb = GetComponent<Rigidbody>();
-        rb.freezeRotation = true;
+        isDancingHash = Animator.StringToHash("isDancing");
+        isAttackingDownwardHash = Animator.StringToHash("isAttackingDownward");
+        isAttackingBackhandHash = Animator.StringToHash("isAttackingBackhand");
+        isAttackingHorizontalHash = Animator.StringToHash("isAttackingHorizontal");
     }
 
     // Update is called once per frame
@@ -41,11 +46,16 @@ public class animationStateController : MonoBehaviour
     {
         bool isRunning = animator.GetBool(isRunningHash);
         bool isWalking = animator.GetBool(isWalkingHash);
-        bool forwardPressed = Input.GetKey("w");
+        bool forwardPressed = Input.GetKey("w") || Input.GetKey("a") || Input.GetKey("s") || Input.GetKey("d");
         bool runPressed = Input.GetKey("left shift");
 
-        bool leftPressed = Input.GetKey("a");
-        bool rightPressed = Input.GetKey("d");
+        bool dancePressed = Input.GetKey("k");
+        animator.SetBool(isDancingHash, false);
+
+        // resetting so it doesnt loop infinitely
+        animator.SetBool(isAttackingDownwardHash, false);
+        animator.SetBool(isAttackingBackhandHash, false);
+        animator.SetBool(isAttackingHorizontalHash, false);
 
         // if player presses w key
         if(!isWalking && forwardPressed){
@@ -64,51 +74,28 @@ public class animationStateController : MonoBehaviour
             animator.SetBool(isRunningHash, false);
         }
 
-        // handle left and right turns
-        if(leftPressed){
-            gameObject.transform.Rotate(0f,-turningSpeed * Time.deltaTime,0f, Space.World);
-        }
-        if(rightPressed){
-            gameObject.transform.Rotate(0f,turningSpeed * Time.deltaTime,0f, Space.World);
+        if(dancePressed){
+            animator.SetBool(isDancingHash, true);
         }
 
-        MyInput();
-        SpeedControl();
-
-        rb.drag = groundDrag;
-    }
-
-     private void FixedUpdate(){
-        MovePlayer();
-    }
-
-    private void MyInput(){
-        //horizontalInput = Input.GetAxisRaw("Horizontal");
-        //verticalInput = Input.GetAxisRaw("Vertical");
-
-        verticalInput = 0f;
-        if(Input.GetKey("w")){
-            verticalInput += 1f;
+        if(!playerScript.hasWeapon){
+            return;
         }
-        if(Input.GetKey("s")){
-            verticalInput -= 1f;
-        }
-    }
 
-    private void MovePlayer(){
-        // calculate movement direction
-        moveDirection = orientation.forward * verticalInput; //+ orientation.right * horizontalInput;
-        // apply the movement
-        //print($"move direction: {moveDirection}");
-        float speed = animator.GetBool(isRunningHash) ? runningSpeed : walkignSpeed;
-        rb.AddForce(moveDirection.normalized * speed * 10f, ForceMode.Force);
-    }
+        bool attackPressed = Input.GetMouseButton(0);
+        bool heavyAttackPressed = Input.GetKey("left shift");
 
-    private void SpeedControl(){
-        Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-        if(flatVel.magnitude > walkignSpeed){
-            Vector3 limitedVel = flatVel.normalized * walkignSpeed;
-            rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
+        if(attackPressed){
+            //swordSound.Play();
+            if(heavyAttackPressed){
+                animator.SetBool(isAttackingBackhandHash, true);
+            }else{
+                List<int> attacks = new () {isAttackingHorizontalHash, isAttackingDownwardHash};
+                System.Random rnd = new System.Random();
+                int attackGenerated = rnd.Next(0, 2);
+                animator.SetBool(attacks[attackGenerated], true);
+            }
         }
+
     }
 }
