@@ -10,6 +10,8 @@ public class animationStateController : MonoBehaviour
     Animator animator;
     Rigidbody rb;
 
+    public PlayerScript playerScript;
+
     int isWalkingHash;
     int isRunningHash;
     int isDancingHash;
@@ -51,8 +53,6 @@ public class animationStateController : MonoBehaviour
         animator.SetBool(isDancingHash, false);
 
         // resetting so it doesnt loop infinitely
-        bool attackPressed = Input.GetMouseButton(0);
-        bool heavyAttackPressed = Input.GetKey("left shift");
         animator.SetBool(isAttackingDownwardHash, false);
         animator.SetBool(isAttackingBackhandHash, false);
         animator.SetBool(isAttackingHorizontalHash, false);
@@ -77,6 +77,13 @@ public class animationStateController : MonoBehaviour
         if(dancePressed){
             animator.SetBool(isDancingHash, true);
         }
+
+        if(!playerScript.hasWeapon){
+            return;
+        }
+
+        bool attackPressed = Input.GetMouseButton(0);
+        bool heavyAttackPressed = Input.GetKey("left shift");
 
         if(attackPressed){
             //swordSound.Play();
