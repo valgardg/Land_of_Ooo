@@ -10,7 +10,7 @@ public class animationStateController : MonoBehaviour
     Animator animator;
     Rigidbody rb;
 
-    public PlayerScript playerScript;
+    public bool hasWeapon;
 
     int isWalkingHash;
     int isRunningHash;
@@ -18,8 +18,6 @@ public class animationStateController : MonoBehaviour
     int isAttackingDownwardHash;
     int isAttackingHorizontalHash;
     int isAttackingBackhandHash;
-    
-    public AudioSource swordSound;
 
     float horizontalInput;
     float verticalInput;
@@ -78,7 +76,7 @@ public class animationStateController : MonoBehaviour
             animator.SetBool(isDancingHash, true);
         }
 
-        if(!playerScript.hasWeapon){
+        if(!hasWeapon){
             return;
         }
 
@@ -86,7 +84,6 @@ public class animationStateController : MonoBehaviour
         bool heavyAttackPressed = Input.GetKey("left shift");
 
         if(attackPressed){
-            //swordSound.Play();
             if(heavyAttackPressed){
                 animator.SetBool(isAttackingBackhandHash, true);
             }else{
