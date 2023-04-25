@@ -1,2 +1,2 @@
 # Land_of_Ooo
-A non profit attempt at creating a video game set in the Land of Ooo.
+An attempt at idealising the world of Adventure Time
